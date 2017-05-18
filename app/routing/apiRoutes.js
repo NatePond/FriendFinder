@@ -19,10 +19,6 @@ module.exports = function(app) {
 //   // (ex: localhost:PORT/api/admin... they are shown a JSON of the data in the table)
 //   // ---------------------------------------------------------------------------
 
-  app.get("/", function(req, res) {
-    console.log(friendsData);
-
-  });
 
   app.get("/api/friends", function(req, res) {
     res.json(friendsData);
@@ -63,8 +59,9 @@ module.exports = function(app) {
     console.log(matchData)
 
     // res.json(matchData.name + matchData.photo);
-    res.json(matchData);
-
+   
+    friendsData.push(req.body) //gets from client 
+    res.send(matchData) //sends to client
 
   });
 
