@@ -175,7 +175,7 @@
           <h2 class="modal-title"><strong>Best Match</strong></h2>
         </div>
         <div class="modal-body">
-          <h2 id="matchName"></h2>
+          <h2 id="matchName">Ahmed</h2>
           <img id="matchImg" src="https://pbs.twimg.com/profile_images/691785039043022849/oWsy8LNR.jpg" alt="">
         </div>
         <div class="modal-footer">
@@ -233,8 +233,6 @@
         // Grab the URL of the website
         var currentURL = window.location.origin;
 
-
-
         // AJAX post the data to the friends API. 
         $.post(currentURL + "/api/friends", userData, function(data){
 
@@ -246,7 +244,7 @@
           $("#resultsModal").modal('toggle');
 
         });
-           
+
     }
     else
     {
