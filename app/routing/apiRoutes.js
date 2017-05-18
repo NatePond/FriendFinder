@@ -4,59 +4,69 @@
 // These data sources hold arrays of information on table-data, waitinglist, etc.
 // ===============================================================================
 
-var tableData = require("../data/tableData");
-var waitListData = require("../data/waitinglistData");
+var friendsData = require("../data/friends");
 
 
-// ===============================================================================
-// ROUTING
-// ===============================================================================
+
+// // ===============================================================================
+// // ROUTING
+// // ===============================================================================
 
 module.exports = function(app) {
-  // API GET Requests
-  // Below code handles when users "visit" a page.
-  // In each of the below cases when a user visits a link
-  // (ex: localhost:PORT/api/admin... they are shown a JSON of the data in the table)
-  // ---------------------------------------------------------------------------
+//   // API GET Requests
+//   // Below code handles when users "visit" a page.
+//   // In each of the below cases when a user visits a link
+//   // (ex: localhost:PORT/api/admin... they are shown a JSON of the data in the table)
+//   // ---------------------------------------------------------------------------
 
-  app.get("/api/tables", function(req, res) {
-    res.json(tableData);
+  app.get("/", function(req, res) {
+    console.log(friendsData);
+
   });
 
-  app.get("/api/waitlist", function(req, res) {
-    res.json(waitListData);
+  app.get("/api/friends", function(req, res) {
+    res.json(friendsData);
+
   });
 
-  // API POST Requests
-  // Below code handles when a user submits a form and thus submits data to the server.
-  // In each of the below cases, when a user submits form data (a JSON object)
-  // ...the JSON is pushed to the appropriate JavaScript array
-  // (ex. User fills out a reservation request... this data is then sent to the server...
-  // Then the server saves the data to the tableData array)
-  // ---------------------------------------------------------------------------
 
-  app.post("/api/tables", function(req, res) {
-    // Note the code here. Our "server" will respond to requests and let users know if they have a table or not.
-    // It will do this by sending out the value "true" have a table
-    if (tableData.length < 5) {
-      tableData.push(req.body);
-      res.json(true);
+  app.post("/api/friends", function(req, res) {
+
+    var currentUser = friendsData[friendsData.length-1];
+    var splicedArray = friendsData.slice(0, friendsData.length-1);
+
+
+    for(var i=0; i<splicedArray.length; i++){
+    var totalDifference = [] //array for total differences of each person
+    var totDifofI = Math.abs(currentUser.scores[1]-splicedArray[i].scores[1])+
+    Math.abs(currentUser.scores[2]-splicedArray[i].scores[2])+
+    Math.abs(currentUser.scores[3]-splicedArray[i].scores[3])+
+    Math.abs(currentUser.scores[4]-splicedArray[i].scores[4])+
+    Math.abs(currentUser.scores[5]-splicedArray[i].scores[5])+
+    Math.abs(currentUser.scores[6]-splicedArray[i].scores[6])+
+    Math.abs(currentUser.scores[7]-splicedArray[i].scores[7])+
+    Math.abs(currentUser.scores[8]-splicedArray[i].scores[8])+
+    Math.abs(currentUser.scores[9]-splicedArray[i].scores[9])+
+    Math.abs(currentUser.scores[10]-splicedArray[i].scores[10]); //total differnce per index
+    totalDifference.push(totDifofI);
+
+    var rearray = []; //array for sorting person based off total differences
+    rearray.push({
+      compositeScore: totalDifference[i],
+      person: splicedArray[i]
+    })
+    rearray.sort(function(a, b){
+      return a.compositeScore-b.compositeScore;
+    }); //sort based off of total difference
+    var matchData = rearray[0].person; //object-person with lowest total difference
     }
-    else {
-      waitListData.push(req.body);
-      res.json(false);
-    }
+    console.log(matchData)
+
+    // res.json(matchData.name + matchData.photo);
+    res.json(matchData);
+
+
   });
 
-  // ---------------------------------------------------------------------------
-  // I added this below code so you could clear out the table while working with the functionality.
-  // Don"t worry about it!
 
-  app.post("/api/clear", function() {
-    // Empty out the arrays of data
-    tableData = [];
-    waitListData = [];
-
-    console.log(tableData);
-  });
 };
